@@ -1,0 +1,99 @@
+* https://langchain.readthedocs.io/en/latest/getting_started/getting_started.html
+** Basic: Deliver text to external model (API), get text response
+** Basic Prompt: Text template which fills in variables
+** CHains: "linking" things together in predetermined order.  Basic is Prompt+LLM, then .run
+** Agents: *Use an LLM* to decide next step.  
+*** Tool: like google search, python REPL, DB Looking
+*** Example:Get a search result and raise it to the .23 power.
+** Memory: Add state.
+*** Short term - support a chatbot
+*** Long term - learn
+*** TODO Read this paper on memory:https://memprompt.com/
+*** TODO NOTE ConversationChain comes with the all previous inputs/outputs and adds to context.
+* Prompts: https://langchain.readthedocs.io/en/latest/modules/prompts/getting_started.html   
+** Prompt Templates
+*** PromptTemplate - fill in template plus input variables to get a prompt (input to LLM)
+**** FewShot tempalte: Give structured examples
+**** ExmapleSelector - function that picks best suited exampels d
+*** Custom Prompts: https://langchain.readthedocs.io/en/latest/modules/prompts/examples/custom_prompt_template.html
+- e.g. FunctionExplainerPromptTemplate will go find the source code for you
+*** Custom Example Selector: https://langchain.readthedocs.io/en/latest/modules/prompts/examples/custom_example_selector.html
+**** TODO Note: SemanticsSimilrityExapleSelcctor uses OpenAIEmbeddings for similarity (cool)
+**** NOTE Semantic similarity is "cosine similarity" (normalized dot product)
+*** Prompt Serialization (use YAML/JSON, not source): https://langchain.readthedocs.io/en/latest/modules/prompts/examples/prompt_serialization.html
+*** More exmaple selectors: https://langchain.readthedocs.io/en/latest/modules/prompts/examples/example_selectors.html    
+- MaxMarginalRelevanceExampleSelector
+- NGramOverlapExampleSelector
+*** Output Parsers: Can somehow ask for structured responses too: https://langchain.readthedocs.io/en/latest/modules/prompts/examples/output_parsers.html
+- e.g. {"answer": ... , "source:" ...} or a comma separated list
+*** NOTE API docs for Prompts: https://langchain.readthedocs.io/en/latest/reference/modules/prompt.html
+*** NOTE API docs for Example Selector: https://langchain.readthedocs.io/en/latest/reference/modules/example_selector.html
+* LLMs: https://langchain.readthedocs.io/en/latest/modules/llms/getting_started.html
+** NOTE File: llms-getting-started.py
+*** NOTE: models, n, best_of ?? are standard across providers
+
+
+Why did the chicken cross the road?
+
+To get to the other side.
+*** NOTE: This returns Generation(text, genration_info{'finish_reason', 'logprobs'})
+[Generation(text='\n\nWhy did the chicken cross the road?\n\nTo get to the other side!', generation_info={'finish_reason': None, 'logprobs': None}), Generation(text='\n\nWhy did the chicken cross the road?\n\nTo get to the other side!', generation_info={'finish_reason': 'stop', 'logprobs': None})]
+*** NOTE: LLM alos outputs completion tokens, prompt tokens
+{'token_usage': {'prompt_tokens': 120, 'total_tokens': 3803, 'completion_tokens': 3683}}
+
+
+** Key Concepts: https://langchain.readthedocs.io/en/latest/modules/llms/key_concepts.html
+*** *LLMs*: Interface wraps external LLM APIs
+*** *Generation* .generate(list of strings) -> LLMResult.  Also can just .() call.  Returns text, maybe logprobs etc in future
+*** LLMResult: list of generations, plus llm_output (provider-specific)
+** Serialization: https://langchain.readthedocs.io/en/latest/modules/llms/examples/llm_serialization.html
+*** NOTE File: llms-examples-llm-serialization.py
+*** NOTE: LLMs can be saved in JSON or yaml.  Check out the default config of text-davinci-003
+[1mOpenAI[0m
+Params: {'model_name': 'text-davinci-003', 'temperature': 0.7, 'max_tokens': 256, 'top_p': 1.0, 'frequency_penalty': 0.0, 'presence_penalty': 0.0, 'n': 1, 'best_of': 1, 'request_timeout': None, 'logit_bias': {}}
+
+** Token Usage: https://langchain.readthedocs.io/en/latest/modules/llms/examples/token_usage_tracking.html
+*** TODO NOTE Token tracking only works for OpenAI API - what are token limits in general?
+*** FILE: llms-examples-token-usage-tracking.py
+42
+*** NOTE Contextm manager in get_openai_callback will track all tokens in scope
+84
+*** NOTE Contextm manager in get_openai_callback will track in chains too
+*** NOTE: serpapi requires signup at https://serpapi.com/, SERPAPI_API_KEY env, and 'pip install google-search-results'
+
+
+[1m> Entering new AgentExecutor chain...[0m
+[32;1m[1;3m I need to find out who Olivia Wilde's boyfriend is and then calculate his age raised to the 0.23 power.
+Action: Search
+Action Input: "Olivia Wilde boyfriend"[0m
+Observation: [36;1m[1;3mSudeikis and Wilde's relationship ended in November 2020. Wilde was publicly served with court documents regarding child custody while she was presenting Don't Worry Darling at CinemaCon 2022. In January 2021, Wilde began dating singer Harry Styles after meeting during the filming of Don't Worry Darling.[0m
+Thought:[32;1m[1;3m I need to find out Harry Styles' age.
+Action: Search
+Action Input: "Harry Styles age"[0m
+Observation: [36;1m[1;3m29 years[0m
+Thought:[32;1m[1;3m I need to calculate 29 raised to the 0.23 power.
+Action: Calculator
+Action Input: 29^0.23[0m
+Observation: [33;1m[1;3mAnswer: 2.169459462491557
+[0m
+Thought:[32;1m[1;3m I now know the final answer.
+Final Answer: Harry Styles, Olivia Wilde's boyfriend, is 29 years old and his age raised to the 0.23 power is 2.169459462491557.[0m
+
+[1m> Finished chain.[0m
+1610
+
+** (LLM) Integrations: https://langchain.readthedocs.io/en/latest/modules/llms/integrations.html
+*** NOTE I'm guessing you need an account and key for each of these, or your own deployment
+*** OpenAI integration: https://langchain.readthedocs.io/en/latest/modules/llms/integrations/openai.html
+**** FILE: llms-integrations-openai.py
+*** NOTE Most of the other integrations look similar (add a key, some sort of model id, run the chain), except
+- "With Azure OpenAI, you set up your own deployments of the common GPT-3 and Codex models"
+- Manifest: Helps make prompt programming easier: https://github.com/HazyResearch/manifest
+*** TODO What does HuggingFace actually do? - it's has a Hub for datasets and models, created Transformers pythng package
+*** TODO Read the odcs on https://huggingface.co/
+*** RunHouse - your own GPUs or on-demand GPUs in AWS etc.
+** Async API: https://langchain.readthedocs.io/en/latest/modules/llms/async_llm.html
+*** FILE: lms-async-llm.py
+*** NOTE Key win - can run OpenAI, PromptLayerOpenAI async and concurrent, instead of in serial
+** Streaming (on ChatOpenAI and OpenAI only): https://langchain.readthedocs.io/en/latest/modules/llms/streaming_llm.html
+** API docs for all LLMs: https://langchain.readthedocs.io/en/latest/reference/modules/llms.html
