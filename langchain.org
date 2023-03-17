@@ -97,3 +97,38 @@ Final Answer: Harry Styles, Olivia Wilde's boyfriend, is 29 years old and his ag
 *** NOTE Key win - can run OpenAI, PromptLayerOpenAI async and concurrent, instead of in serial
 ** Streaming (on ChatOpenAI and OpenAI only): https://langchain.readthedocs.io/en/latest/modules/llms/streaming_llm.html
 ** API docs for all LLMs: https://langchain.readthedocs.io/en/latest/reference/modules/llms.html
+* Document Loaders: https://langchain.readthedocs.io/en/latest/modules/document_loaders.html
+** Main ideas: The "Unstructured" python package (ppt, img, pdf, html etc -> txt) does the work here.
+** https://langchain.readthedocs.io/en/latest/modules/document_loaders/key_concepts.html
+- Document.page_content, .metadata
+- Loader.load() -> Document
+** NOTE Tons of How-to guides for loading from everywhere: https://langchain.readthedocs.io/en/latest/modules/document_loaders/how_to_guides.html
+** NOTE Lots of scrapers for individual sites (e.g. CollegeConfidential, AZLyrics)
+- CoNLL-U : Parts of speech
+- Airbyte - data connectors (TODO ELT?)
+- Document: "Copy paste" right from source file
+- NOTE: There is FB messenger data reader!  Can download from FB
+- Google Doc
+- Gutenberg ebooks!
+*** TODO Images?  Install detectron2 , pytorch, otehr stuff: https://langchain.readthedocs.io/en/latest/modules/document_loaders/examples/image.html
+- MSWord
+- Python notebook
+- Evernote / Notion / Obsidian
+- 
+*** TODO PDF Files - could be interesting: https://langchain.readthedocs.io/en/latest/modules/document_loaders/examples/unstructured_file.html
+- Arbitrary Web (?): https://langchain.readthedocs.io/en/latest/modules/document_loaders/examples/web_base.html
+*** Sucking in youtube subtitles (nasty):https://langchain.readthedocs.io/en/latest/modules/document_loaders/examples/youtube.html
+**** FILE: document-loaders-examples-youtube.py 
+* Utils (external tools): https://langchain.readthedocs.io/en/latest/modules/utils.html
+** NOTE Pyton REPL, Bash, "Python [Web] Requests", GoogleSearch, Serp (alsogoogle search), Searx (meta serch engine)
+** NOTE Search APIs mostly need API keys (I have SerpAPI_API_KEY)
+** IFTTT webhooks
+** Python - returns what's *printed*
+** Search with SerpAPI: https://langchain.readthedocs.io/en/latest/modules/utils/examples/serpapi.html
+*** FILE:  utils-examples-serpapi.py
+** Wolfram Alpha:
+** TODO Zapier Natual Language Actions API: https://langchain.readthedocs.io/en/latest/modules/utils/examples/zapier.html
+*** Like a WOOF - connect gmaill, slack, etc.
+*** Need to set up all the integrations server-side (on Zapier) like an OAuth
+** Utilities API docs: https://langchain.readthedocs.io/en/latest/reference/utils.html
+* TODO Start on Indexes: https://langchain.readthedocs.io/en/latest/modules/indexes.html
